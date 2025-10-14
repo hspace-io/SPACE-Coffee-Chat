@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom"; // URL 쿼리 확인용
 import axios from "axios";
 import CalendarSchedule from "../components/CalendarSchedule";
 import ApplyModal from "../components/ApplyModal";
+
 
 export default function ReservationList({ currentUser }) {
   const location = useLocation();
@@ -13,13 +14,10 @@ export default function ReservationList({ currentUser }) {
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [applicant, setApplicant] = useState({ email: "", nickname: "" });
 
-  // 백엔드 서버 주소
-  const API_BASE = "http://192.168.10.135:4000/api"; // <VM-IP>를 실제 VM IP로 변경
-
   // 예약 목록 가져오기
   const fetchReservations = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/reservations`);
+      const res = await axios.get("http://localhost:4000/api/reservations");
       const now = new Date();
 
       const all = res.data.map((r) => ({ ...r, id: r._id }));
@@ -62,7 +60,7 @@ export default function ReservationList({ currentUser }) {
 
     try {
       await axios.post(
-        `${API_BASE}/reservations/${reservation.id}/apply`,
+        `http://localhost:4000/api/reservations/${reservation.id}/apply`,
         applicantData
       );
 

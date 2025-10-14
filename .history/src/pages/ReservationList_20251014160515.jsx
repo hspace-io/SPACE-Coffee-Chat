@@ -14,7 +14,7 @@ export default function ReservationList({ currentUser }) {
   const [applicant, setApplicant] = useState({ email: "", nickname: "" });
 
   // 백엔드 서버 주소
-  const API_BASE = "http://192.168.10.135:4000/api"; // <VM-IP>를 실제 VM IP로 변경
+  const API_BASE = "http://<VM-IP>:3943/api"; // <VM-IP>를 실제 VM IP로 변경
 
   // 예약 목록 가져오기
   const fetchReservations = async () => {
