@@ -13,6 +13,7 @@ yarn-error.log
 Thumbs.db
 
 # Blender / 3D models
+*.glb
 *.fbx
 *.obj
 
