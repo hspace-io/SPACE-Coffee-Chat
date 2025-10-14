@@ -16,11 +16,10 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((err) => console.error("MongoDB connection error:", err));
 
 // 미들웨어
-app.use(cors({ origin: "*" })); // 수정된 부분
+app.use(cors());
 app.use(express.json());
 
 // 라우트
 app.use("/api/reservations", reservationRoutes);
 
-// 모든 인터페이스에서 요청 받기
-app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
