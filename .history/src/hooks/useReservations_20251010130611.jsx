@@ -9,7 +9,7 @@ export const useReservations = () => {
   const fetchReservations = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://192.168.10.135:4000/api/reservations");
+      const res = await axios.get("http://localhost:4000/api/reservations");
       const all = res.data.map((r) => ({ ...r, id: r._id }));
       setAllReservations(all);
       setFutureReservations(all.filter((r) => new Date(r.startTime) > new Date()));
