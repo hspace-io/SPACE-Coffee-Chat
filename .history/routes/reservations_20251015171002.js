@@ -1,7 +1,7 @@
 const path = require("path");
 const express = require("express");
 const router = express.Router();
-const reservationController = require(path.join(__dirname, "..", "controllers", "reservationController.js"));
+const reservationController = require(path.join(__dirname, "..", "controllers", "reservationController"));
 
 router.get("/", reservationController.getAllReservations);
 router.post("/", reservationController.createReservation);

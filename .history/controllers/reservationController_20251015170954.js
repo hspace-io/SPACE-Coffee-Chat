@@ -1,5 +1,5 @@
 const path = require("path");
-const Reservation = require(path.join(__dirname, "..", "models", "Reservations.js"));
+const Reservation = require(path.join(__dirname, "..", "models", "Reservations"));
 
 // 전체 예약 조회
 exports.getAllReservations = async (req, res) => {

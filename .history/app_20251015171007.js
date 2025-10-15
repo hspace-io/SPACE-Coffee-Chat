@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const reservationRoutes = require(path.join(__dirname, "routes", "reservations.js"));
+const reservationRoutes = require(path.join(__dirname, "routes", "reservations"));
 require("dotenv").config();
 
 const app = express();
