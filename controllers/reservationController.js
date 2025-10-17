@@ -6,12 +6,15 @@ exports.getAllReservations = async (req, res) => {
   try {
     const reservations = await Reservation.find().lean();
 
-    console.log("DB 조회 결과:", reservations.length, "개"); // 조회된 개수 확인
-    if (!reservations.length) {
-      console.warn("DB에 예약 데이터가 없습니다!");
-    }
+    // currentPeople이 없는 경우 0으로 초기화
+    const fixedReservations = reservations.map(r => ({
+      ...r,
+      currentPeople: r.currentPeople || 0,
+      id: r._id
+    }));
 
-    res.json(reservations.map(r => ({ ...r, id: r._id })));
+    console.log("DB 조회 결과:", fixedReservations.length, "개");
+    res.json(fixedReservations);
   } catch (err) {
     console.error("DB 조회 실패 ❌", err);
     res.status(500).json({ 
@@ -35,6 +38,9 @@ exports.createReservation = async (req, res) => {
       startTime,
       endTime,
       maxPeople,
+      currentPeople: 0, // 초기값
+      applicants: [],
+      comments: []
     });
 
     console.log("예약 생성 ✅", newReservation._id);
@@ -55,11 +61,19 @@ exports.applyReservation = async (req, res) => {
     const reservation = await Reservation.findById(reservationId);
     if (!reservation) return res.status(404).json({ message: "예약 없음" });
 
+    // applicants 배열 초기화
+    if (!reservation.applicants) reservation.applicants = [];
+    if (!reservation.currentPeople && reservation.currentPeople !== 0) reservation.currentPeople = 0;
+
     const exists = reservation.applicants.some(a => a.email === email);
     if (exists) return res.status(400).json({ message: "이미 신청했습니다." });
 
+    if (reservation.currentPeople >= reservation.maxPeople)
+      return res.status(400).json({ message: "정원이 이미 찼습니다." });
+
     reservation.applicants.push({ email, nickname });
     reservation.currentPeople += 1;
+
     await reservation.save();
 
     console.log("예약 신청 완료 ✅", reservationId, email);
@@ -80,6 +94,7 @@ exports.addComment = async (req, res) => {
     const reservation = await Reservation.findById(reservationId);
     if (!reservation) return res.status(404).json({ message: "예약 없음" });
 
+    if (!reservation.comments) reservation.comments = [];
     reservation.comments.push({ text });
     await reservation.save();
 
