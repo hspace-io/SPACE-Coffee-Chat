@@ -14,7 +14,7 @@ export default function ReservationList({ currentUser }) {
   const [applicant, setApplicant] = useState({ email: "", nickname: "" });
 
   // 백엔드 서버 주소
-  const API_BASE = "http://192.168.10.135:4000/api";
+  const API_BASE = "http://192.168.10.137:4000/api";
 
   // 예약 목록 가져오기
   const fetchReservations = async () => {
