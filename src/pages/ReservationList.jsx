@@ -1,4 +1,3 @@
-// ReservationList.jsx
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
@@ -15,7 +14,7 @@ export default function ReservationList({ currentUser }) {
   const [applicant, setApplicant] = useState({ email: "", nickname: "" });
 
   // 백엔드 서버 주소
-  const API_BASE = "http://192.168.10.135:4000/api"; // 변경 완료
+  const API_BASE = "http://192.168.10.135:4000/api";
 
   // 예약 목록 가져오기
   const fetchReservations = async () => {
@@ -23,7 +22,12 @@ export default function ReservationList({ currentUser }) {
       const res = await axios.get(`${API_BASE}/reservations`);
       const now = new Date();
 
-      const all = res.data.map((r) => ({ ...r, id: r._id }));
+      // currentPeople가 없으면 0으로 초기화
+      const all = res.data.map((r) => ({
+        ...r,
+        id: r._id,
+        currentPeople: r.currentPeople || 0,
+      }));
       setAllReservations(all);
 
       const future = all.filter((r) => new Date(r.startTime) > now);
@@ -62,16 +66,21 @@ export default function ReservationList({ currentUser }) {
     }
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `${API_BASE}/reservations/${reservation.id}/apply`,
         applicantData
       );
 
-      await fetchReservations();
-      alert("예약 신청 완료!");
-      setSelectedReservation(null);
-      setApplicant({ email: "", nickname: "" });
-      setShowApplyModal(false);
+      // 서버에서 메시지 확인
+      if (res.data.message === "예약 신청 완료") {
+        await fetchReservations();
+        alert("예약 신청 완료!");
+        setSelectedReservation(null);
+        setApplicant({ email: "", nickname: "" });
+        setShowApplyModal(false);
+      } else {
+        alert(res.data.message || "예약 신청 실패");
+      }
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "예약 신청 실패");
