@@ -11,7 +11,7 @@ router.get("/test", (req, res) => {
       name: "테스트 예약",
       memo: "한글 메모",
       startTime: new Date(),
-      endTime: new Date(new Date().getTime() + 3600 * 1000),
+      endTime: new Date(Date.now() + 3600 * 1000), // 1시간 후
       maxPeople: 5,
       currentPeople: 0,
       applicants: [],
@@ -23,22 +23,22 @@ router.get("/test", (req, res) => {
 });
 
 // DB 전체 예약 조회
-if (reservationController?.getAllReservations) {
+if (reservationController && typeof reservationController.getAllReservations === "function") {
   router.get("/", reservationController.getAllReservations);
 }
 
 // 예약 생성
-if (reservationController?.createReservation) {
+if (reservationController && typeof reservationController.createReservation === "function") {
   router.post("/", reservationController.createReservation);
 }
 
 // 예약 신청
-if (reservationController?.applyReservation) {
+if (reservationController && typeof reservationController.applyReservation === "function") {
   router.post("/:reservationId/apply", reservationController.applyReservation);
 }
 
 // 댓글 추가
-if (reservationController?.addComment) {
+if (reservationController && typeof reservationController.addComment === "function") {
   router.post("/:reservationId/comments", reservationController.addComment);
 }
 
