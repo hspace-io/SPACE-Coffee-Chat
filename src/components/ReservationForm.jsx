@@ -17,7 +17,7 @@ export default function ReservationForm({ currentUserEmail, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/api/reservations", {
+      await axios.post("http://192.168.10.140:4000/api/reservations", {
         ...reservation,
         email: currentUserEmail,
       });
