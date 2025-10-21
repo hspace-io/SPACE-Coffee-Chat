@@ -1,3 +1,9 @@
+// routes/reservations.js
+const express = require("express");
+const router = express.Router();
+const reservationController = require("../controllers/reservationController.js");
+
+// 테스트 라우트
 router.get("/test", (req, res) => {
   const testData = [
     {
@@ -13,5 +19,27 @@ router.get("/test", (req, res) => {
     }
   ];
 
-  res.json(testData); // 이거면 UTF-8 자동 적용됨
+  res.json(testData);
 });
+
+// DB 전체 예약 조회
+if (reservationController?.getAllReservations) {
+  router.get("/", reservationController.getAllReservations);
+}
+
+// 예약 생성
+if (reservationController?.createReservation) {
+  router.post("/", reservationController.createReservation);
+}
+
+// 예약 신청
+if (reservationController?.applyReservation) {
+  router.post("/:reservationId/apply", reservationController.applyReservation);
+}
+
+// 댓글 추가
+if (reservationController?.addComment) {
+  router.post("/:reservationId/comments", reservationController.addComment);
+}
+
+module.exports = router;
