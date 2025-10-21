@@ -19,6 +19,7 @@ router.get("/test", (req, res) => {
     }
   ];
 
+  // res.json() 자체가 UTF-8 적용됨
   res.json(testData);
 });
 
@@ -32,7 +33,7 @@ if (reservationController && typeof reservationController.createReservation === 
   router.post("/", reservationController.createReservation);
 }
 
-// 예약 신청
+// 예약 신청 (경로 매개변수 반드시 콜론 뒤에 이름)
 if (reservationController && typeof reservationController.applyReservation === "function") {
   router.post("/:reservationId/apply", reservationController.applyReservation);
 }
