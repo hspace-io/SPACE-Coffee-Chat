@@ -1,16 +1,32 @@
-const express = require("express");
 const path = require("path");
+const express = require("express");
 const router = express.Router();
 
 // controllers 불러오기
 const reservationController = require(path.join(__dirname, "..", "controllers", "reservationController.js"));
 
-// 테스트 라우트
+// 🔹 테스트용 라우트
 router.get("/test", (req, res) => {
-  res.json([{ _id: "test", startTime: new Date() }]);
+  const testData = [
+    {
+      _id: "1",
+      name: "테스트 예약",
+      memo: "한글 메모",
+      startTime: new Date(),
+      endTime: new Date(new Date().getTime() + 3600 * 1000), // 1시간 후
+      maxPeople: 5,
+      currentPeople: 0,
+      applicants: [],
+      comments: []
+    }
+  ];
+
+  // UTF-8 명시
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.json(testData);
 });
 
-// 반드시 함수 확인
+// 기존 controller 함수 등록
 if (reservationController && typeof reservationController.getAllReservations === "function") {
   router.get("/", reservationController.getAllReservations);
 }
