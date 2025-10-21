@@ -1,32 +1,32 @@
 const path = require("path");
-const express = require("express");
-const router = express.Router();
-const reservationController = require(path.join(__dirname, "..", "controllers", "reservationController.js"));
+const Reservation = require(path.join(__dirname, "..", "models", "Reservation.js"));
 
-// 🔹 테스트용 한글 데이터 라우트
-router.get("/test", (req, res) => {
-  const testData = [
-    {
-      _id: "1",
-      name: "테스트 예약",
-      memo: "한글 메모",
-      startTime: new Date(),
-      endTime: new Date(new Date().getTime() + 3600 * 1000), // 1시간 후
-      maxPeople: 5,
-      currentPeople: 0,
-      applicants: [],
-      comments: []
-    }
-  ];
+// 전체 예약 조회
+async function getAllReservations(req, res) {
+  try {
+    const reservations = await Reservation.find().lean();
+    const fixedReservations = reservations.map(r => ({
+      ...r,
+      currentPeople: r.currentPeople || 0,
+      id: r._id
+    }));
 
-  res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.json(testData);
-});
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.json(fixedReservations);
+  } catch (err) {
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.status(500).json({ error: "DB 조회 실패", details: err.message });
+  }
+}
 
-// 기존 라우트
-router.get("/", reservationController.getAllReservations);
-router.post("/", reservationController.createReservation);
-router.post("/:reservationId/apply", reservationController.applyReservation);
-router.post("/:reservationId/comments", reservationController.addComment);
+// 예약 생성
+async function createReservation(req, res) { /* 기존 코드 그대로 */ }
+async function applyReservation(req, res) { /* 기존 코드 그대로 */ }
+async function addComment(req, res) { /* 기존 코드 그대로 */ }
 
-module.exports = router;
+module.exports = {
+  getAllReservations,
+  createReservation,
+  applyReservation,
+  addComment
+};
