@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_BASE = "http://192.168.10.140:4000/api/reservations"; // 절대 경로
-
 export default function ReservationForm({ currentUserEmail, onSuccess }) {
   const [reservation, setReservation] = useState({
     name: "",
@@ -19,7 +17,7 @@ export default function ReservationForm({ currentUserEmail, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(API_BASE, { ...reservation, email: currentUserEmail }); // 절대 경로
+      await axios.post("http://192.168.10.140:4000/api/reservations", { ...reservation, email: currentUserEmail });
       alert("예약 등록 완료!");
       setReservation({ name: "", maxPeople: "", startTime: "", endTime: "", memo: "" });
       onSuccess();

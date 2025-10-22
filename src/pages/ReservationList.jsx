@@ -4,8 +4,6 @@ import axios from "axios";
 import CalendarSchedule from "../components/CalendarSchedule";
 import ApplyModal from "../components/ApplyModal";
 
-const API_BASE = "http://192.168.10.140:4000/api/reservations"; // ✅ 절대 경로
-
 export default function ReservationList({ currentUser }) {
   const location = useLocation();
   const [allReservations, setAllReservations] = useState([]);
@@ -16,7 +14,7 @@ export default function ReservationList({ currentUser }) {
 
   const fetchReservations = async () => {
     try {
-      const res = await axios.get(API_BASE); // 절대 경로
+      const res = await axios.get("http://192.168.10.140:4000/api/reservations");
       const now = new Date();
       const all = res.data.map((r) => ({ ...r, id: r._id, currentPeople: r.currentPeople || 0 }));
       setAllReservations(all);
@@ -27,16 +25,14 @@ export default function ReservationList({ currentUser }) {
     }
   };
 
-  useEffect(() => {
-    fetchReservations();
-  }, []);
+  useEffect(() => { fetchReservations(); }, []);
 
   const handleApply = async (reservation, applicantData) => {
     if (!reservation || !applicantData.email || !applicantData.nickname) {
       return alert("이메일과 닉네임을 입력해주세요.");
     }
     try {
-      const res = await axios.post(`${API_BASE}/${reservation.id}/apply`, applicantData); // 절대 경로
+      const res = await axios.post(`http://192.168.10.140:4000/api/reservations/${reservation.id}/apply`, applicantData);
       if (res.data.message === "예약 신청 완료") {
         await fetchReservations();
         alert("예약 신청 완료!");
@@ -67,9 +63,7 @@ export default function ReservationList({ currentUser }) {
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="font-semibold">{r.name}</div>
-                    <div className="text-xs text-gray-600">
-                      {new Date(r.startTime).toLocaleString()} - {new Date(r.endTime).toLocaleTimeString()}
-                    </div>
+                    <div className="text-xs text-gray-600">{new Date(r.startTime).toLocaleString()} - {new Date(r.endTime).toLocaleTimeString()}</div>
                     <div className="text-xs text-gray-600">메모: {r.memo}</div>
                   </div>
                   <div className="text-right">
@@ -87,6 +81,7 @@ export default function ReservationList({ currentUser }) {
             );
           })}
         </div>
+
         <div>
           <h2 className="font-semibold mb-2">주간 캘린더 (30분)</h2>
           <CalendarSchedule
