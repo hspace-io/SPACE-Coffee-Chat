@@ -13,16 +13,15 @@ export default function ReservationList({ currentUser }) {
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [applicant, setApplicant] = useState({ email: "", nickname: "" });
 
-  // 백엔드 서버 주소
-  const API_BASE = "http://192.168.10.137:4000/api/reservations";
+  // ✅ 상대 경로 사용
+  const API_BASE = "/api/reservations";
 
   // 예약 목록 가져오기
   const fetchReservations = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/reservations`);
+      const res = await axios.get(API_BASE); // 절대 경로 제거
       const now = new Date();
 
-      // currentPeople가 없으면 0으로 초기화
       const all = res.data.map((r) => ({
         ...r,
         id: r._id,
@@ -67,11 +66,10 @@ export default function ReservationList({ currentUser }) {
 
     try {
       const res = await axios.post(
-        `${API_BASE}/reservations/${reservation.id}/apply`,
+        `${API_BASE}/${reservation.id}/apply`, // 절대 경로 제거
         applicantData
       );
 
-      // 서버에서 메시지 확인
       if (res.data.message === "예약 신청 완료") {
         await fetchReservations();
         alert("예약 신청 완료!");

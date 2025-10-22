@@ -17,7 +17,8 @@ export default function ReservationForm({ currentUserEmail, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://192.168.10.140:4000/api/reservations", {
+      // ✅ 절대 경로 제거 → 상대 경로 사용
+      await axios.post("/api/reservations", {
         ...reservation,
         email: currentUserEmail,
       });
