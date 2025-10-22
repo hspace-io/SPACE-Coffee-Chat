@@ -9,7 +9,7 @@ export const useReservations = () => {
   const fetchReservations = async () => {
     setLoading(true);
     try {
-      // ✅ 절대 경로 제거 → 상대 경로 사용
+      // ✅ proxy 사용 → 상대 경로
       const res = await axios.get("/api/reservations");
       const all = res.data.map((r) => ({ ...r, id: r._id }));
       setAllReservations(all);
