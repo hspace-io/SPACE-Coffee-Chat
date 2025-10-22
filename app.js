@@ -7,7 +7,7 @@ const app = express();
 
 // 🔹 CORS 설정
 const corsOptions = {
-  origin: "http://192.168.10.140:3000", // 프론트 주소
+  origin: "http://192.168.10.140:3000", // React 프론트
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -15,14 +15,13 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// 🔹 Preflight 요청 처리
+// 🔹 Preflight(OPTIONS) 요청 처리
 app.options("*", cors(corsOptions));
 
 // 🔹 JSON 바디 파싱
 app.use(express.json());
 
-// 🔹 안전하게 라우트 연결
-// 경로 문자열에 ':' 없음 → path error 방지
+// 🔹 라우트 연결
 app.use("/api/reservations", reservationRoutes);
 
 module.exports = app;
