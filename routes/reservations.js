@@ -1,4 +1,3 @@
-// routes/reservations.js
 const express = require("express");
 const router = express.Router();
 const reservationController = require("../controllers/reservationController.js");
@@ -11,14 +10,13 @@ router.get("/test", (req, res) => {
       name: "테스트 예약",
       memo: "한글 메모",
       startTime: new Date(),
-      endTime: new Date(Date.now() + 3600 * 1000), // 1시간 후
+      endTime: new Date(Date.now() + 3600 * 1000),
       maxPeople: 5,
       currentPeople: 0,
       applicants: [],
       comments: []
     }
   ];
-
   res.json(testData);
 });
 
