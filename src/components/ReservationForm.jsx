@@ -17,11 +17,7 @@ export default function ReservationForm({ currentUserEmail, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ proxy 사용 → 상대 경로
-      await axios.post("/api/reservations", {
-        ...reservation,
-        email: currentUserEmail,
-      });
+      await axios.post("/api/reservations", { ...reservation, email: currentUserEmail }); // ✅ 상대경로
       alert("예약 등록 완료!");
       setReservation({ name: "", maxPeople: "", startTime: "", endTime: "", memo: "" });
       onSuccess();

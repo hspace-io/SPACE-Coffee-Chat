@@ -9,8 +9,7 @@ export const useReservations = () => {
   const fetchReservations = async () => {
     setLoading(true);
     try {
-      // ✅ proxy 사용 → 상대 경로
-      const res = await axios.get("/api/reservations");
+      const res = await axios.get("/api/reservations"); // ✅ 상대경로
       const all = res.data.map((r) => ({ ...r, id: r._id }));
       setAllReservations(all);
       setFutureReservations(all.filter((r) => new Date(r.startTime) > new Date()));

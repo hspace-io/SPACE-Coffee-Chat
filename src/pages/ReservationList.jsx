@@ -14,7 +14,7 @@ export default function ReservationList({ currentUser }) {
 
   const fetchReservations = async () => {
     try {
-      const res = await axios.get("/api/reservations"); // ✅ 절대경로 제거
+      const res = await axios.get("/api/reservations"); // ✅ 상대경로
       const now = new Date();
       const all = res.data.map((r) => ({ ...r, id: r._id, currentPeople: r.currentPeople || 0 }));
       setAllReservations(all);
@@ -29,27 +29,12 @@ export default function ReservationList({ currentUser }) {
     fetchReservations();
   }, []);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const applyId = params.get("applyId");
-    if (applyId && allReservations.length) {
-      const reservation = allReservations.find((r) => r.id === applyId);
-      if (reservation) {
-        setSelectedReservation(reservation);
-        setApplicant({ email: currentUser?.email || "", nickname: currentUser?.nickname || "" });
-        setShowApplyModal(true);
-      }
-    }
-  }, [location.search, allReservations, currentUser]);
-
   const handleApply = async (reservation, applicantData) => {
     if (!reservation || !applicantData.email || !applicantData.nickname) {
       return alert("이메일과 닉네임을 입력해주세요.");
     }
-
     try {
-      // ✅ proxy 사용 → 상대경로
-      const res = await axios.post(`/api/reservations/${reservation.id}/apply`, applicantData);
+      const res = await axios.post(`/api/reservations/${reservation.id}/apply`, applicantData); // ✅ 상대경로
       if (res.data.message === "예약 신청 완료") {
         await fetchReservations();
         alert("예약 신청 완료!");
@@ -80,19 +65,13 @@ export default function ReservationList({ currentUser }) {
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="font-semibold">{r.name}</div>
-                    <div className="text-xs text-gray-600">
-                      {new Date(r.startTime).toLocaleString()} - {new Date(r.endTime).toLocaleTimeString()}
-                    </div>
+                    <div className="text-xs text-gray-600">{new Date(r.startTime).toLocaleString()} - {new Date(r.endTime).toLocaleTimeString()}</div>
                     <div className="text-xs text-gray-600">메모: {r.memo}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm">{r.currentPeople}/{r.maxPeople}</div>
                     <button
-                      onClick={() => {
-                        setSelectedReservation(r);
-                        setApplicant({ email: currentUser?.email || "", nickname: currentUser?.nickname || "" });
-                        setShowApplyModal(true);
-                      }}
+                      onClick={() => { setSelectedReservation(r); setApplicant({ email: currentUser?.email || "", nickname: currentUser?.nickname || "" }); setShowApplyModal(true); }}
                       disabled={isPast || isFull}
                       className={`mt-2 px-2 py-1 rounded text-white ${!isPast && !isFull ? "bg-blue-500" : "bg-gray-300 text-gray-700 cursor-not-allowed"}`}
                     >
@@ -111,11 +90,7 @@ export default function ReservationList({ currentUser }) {
             key={allReservations.length}
             reservations={allReservations}
             onApply={(reservation) => {
-              if (reservation) {
-                setSelectedReservation(reservation);
-                setApplicant({ email: currentUser?.email || "", nickname: currentUser?.nickname || "" });
-                setShowApplyModal(true);
-              }
+              if (reservation) { setSelectedReservation(reservation); setApplicant({ email: currentUser?.email || "", nickname: currentUser?.nickname || "" }); setShowApplyModal(true); }
             }}
             startHour={7}
             endHour={22}
