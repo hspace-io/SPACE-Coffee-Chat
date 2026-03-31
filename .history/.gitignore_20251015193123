@@ -15,7 +15,7 @@ Thumbs.db
 # Blender / 3D models
 *.fbx
 *.obj
-*.glb
+*.gl
 
 # Production output
 coverage/
